@@ -1,0 +1,25 @@
+{
+    "extends": "../packages/core/tsconfig.json",
+    "paths": {
+        "@own/client-twitter": [
+            "../../packages/client-twitter/src/index.ts"
+        ]
+    },
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": ".",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "types": [
+            "node"
+        ]
+    },
+    "ts-node": {
+        "experimentalSpecifierResolution": "node",
+        "transpileOnly": true,
+        "esm": true,
+    },
+    "include": [
+        "src"
+    ]
+}
