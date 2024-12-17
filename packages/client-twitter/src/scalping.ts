@@ -156,7 +156,7 @@ export class ScalpingIdeaClient {
         console.log(scalpIdea);
         elizaLogger.log(scalpIdea);
         elizaLogger.log("sending message to telegram " + this.runtime.getSetting("TELEGRAM_CHANNEL_ID"));
-        // this.tg_bot.telegram.sendMessage(this.runtime.getSetting("TELEGRAM_CHANNEL_ID"), scalpIdea);
+        this.tg_bot.telegram.sendMessage(this.runtime.getSetting("TELEGRAM_CHANNEL_ID"), scalpIdea);
         // send to group chat
 
         // Post tweet and save as memory
@@ -221,7 +221,7 @@ const getScalpIdea = async (runtime: IAgentRuntime, token: any) => {
     });
 
     const tokenPerformanceTemplate = `
-    # Task: Generate a casual, bilingual (Spanish/English)  trading idea tweet in the voice of {{agentName}} (@{{twitterUserName}})
+    # Task: Generate a casual, trading idea tweet in the voice of {{agentName}} (@{{twitterUserName}})
 
     Token Info:
     - Symbol: ${token.symbol}
@@ -237,10 +237,11 @@ const getScalpIdea = async (runtime: IAgentRuntime, token: any) => {
     Guidelines:
     - Sometimes mention for meme coins
     - always break sentences in multiple lines
-    - Keep it personal and fun - mention why you like the token
+    - mention why you like the token
     - Don't make it sound too technical or formal
     - avoid hashtags
     - keep targets vague without numbers
+    - dont include prices
 
 
     # Generate a casual scalping tweet:

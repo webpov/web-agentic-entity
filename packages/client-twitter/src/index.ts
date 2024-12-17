@@ -32,7 +32,7 @@ class TwitterManager {
 
         // this.client = new ClientBase(runtime);
         elizaLogger.log("starting twitter post client");
-        // this.post = new TwitterPostClient(this.client, runtime); // every 44 mins post about coin scalp idea
+        this.post = new TwitterPostClient(this.client, runtime, this.tg_bot); // every 44 mins post about coin scalp idea
         //start everything else after 5 mins
         // setTimeout(() => {
             elizaLogger.log("starting twitter scalping client");
