@@ -129,7 +129,7 @@ export class ScalpingIdeaClient {
         elizaLogger.log("Starting scalping loop");
         setTimeout(
             () => this.startLoop(),
-            Number(2640) * 1000 // 44 minutes
+            Number(5940) * 1000 // 99 minutes
         );
     }
 
@@ -138,8 +138,12 @@ export class ScalpingIdeaClient {
         const topTokens = await getTopTokensPricesByVolume();
         // remove pairs usdt at the start
         const filteredOut = topTokens.filter((token: any) => !token.symbol.startsWith("USDT"));
+        // only include ending with USDT
+        const filteredOut1 = filteredOut.filter((token: any) => token.symbol.endsWith("USDT"));
+        // pick 10 random tokens
+        const filteredOut2 = filteredOut1.sort(() => 0.5 - Math.random()).slice(0, 10);
         // it has to include both sides of the pair in RELATED_TOKENS
-        const filteredOut2 = filteredOut.filter((token: any) => RELATED_TOKENS.includes(token.symbol));
+        // const filteredOut2 = filteredOut.filter((token: any) => RELATED_TOKENS.includes(token.symbol));
 
 
         // top 3 tokens
@@ -235,9 +239,8 @@ const getScalpIdea = async (runtime: IAgentRuntime, token: any) => {
     - dont include greetings or questions
 
     Guidelines:
-    - Sometimes mention for meme coins
     - always break sentences in multiple lines
-    - mention why you like the token
+    - mention why the reader might like the token
     - Don't make it sound too technical or formal
     - avoid hashtags
     - keep targets vague without numbers

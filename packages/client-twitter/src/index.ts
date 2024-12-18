@@ -9,6 +9,7 @@ import { ScalpingIdeaClient } from "./scalping.ts";
 import { TwitterLikeClient } from "./like.ts";
 import { Context, Telegraf } from "telegraf";
 import { MessageManager } from "./messageManager.ts";
+import { CryptoTrendingClient } from "./trending.ts";
 
 class TwitterManager {
     client: ClientBase;
@@ -19,31 +20,36 @@ class TwitterManager {
     interaction: TwitterInteractionClient;
     private messageManager: MessageManager;
     discovery: TwitterDiscoveryClient;
+    trending: CryptoTrendingClient;
     tg_bot: Telegraf<Context>;
     constructor(runtime: IAgentRuntime, botToken: string) {
+        // every 66 mins trending coin analysis
         // every 55 mins retweet own recent post
         // every 44 mins post about coin scalp idea
         // every 33 mins comment on a random post
         // every 22 mins like a random post
         // every 11 mins reply to mentions
         this.tg_bot = new Telegraf(botToken);
+        elizaLogger.log("starting crypto trending client 99 mins");
+        this.trending = new CryptoTrendingClient(runtime, this.tg_bot);
         this.messageManager = new MessageManager(this.tg_bot, runtime);
-        elizaLogger.log("✅ TelegramClient constructor completed");
+        elizaLogger.log("starting twitter scalping client 66 mins");
+        this.scalping = new ScalpingIdeaClient(this.client, runtime, this.tg_bot); 
+        elizaLogger.log("starting twitter post client every 44 mins");
+        this.post = new TwitterPostClient(this.client, runtime, this.tg_bot); 
+
+
+
+
 
         // this.client = new ClientBase(runtime);
-        elizaLogger.log("starting twitter post client");
-        this.post = new TwitterPostClient(this.client, runtime, this.tg_bot); // every 44 mins post about coin scalp idea
-        //start everything else after 5 mins
-        // setTimeout(() => {
-            elizaLogger.log("starting twitter scalping client");
-            this.scalping = new ScalpingIdeaClient(this.client, runtime, this.tg_bot); // every 44 mins
-            elizaLogger.log("starting twitter discovery client");
-            // this.discovery = new TwitterDiscoveryClient(this.client, runtime); // every 33 mins comment on a random post
-            // elizaLogger.log("starting twitter like client");
-            // this.like = new TwitterLikeClient(this.client, runtime); // every 22 mins comment on a random post
-            // elizaLogger.log("starting twitter interaction client");
-            // this.interaction = new TwitterInteractionClient(this.client, runtime); // every 11 mins reply to own post
-        // }, 1 * 60 * 1000);
+        // twitter clients
+        // elizaLogger.log("starting twitter discovery client");
+        // this.discovery = new TwitterDiscoveryClient(this.client, runtime); // every 33 mins comment on a random post
+        // elizaLogger.log("starting twitter like client");
+        // this.like = new TwitterLikeClient(this.client, runtime); // every 22 mins like a random post
+        // elizaLogger.log("starting twitter interaction client");
+        // this.interaction = new TwitterInteractionClient(this.client, runtime); // every 11 mins reply to own post
 
         // this.search = new TwitterSearchClient(runtime); // don't start the search client by default
         // this searches topics from character file, but kind of violates consent of random users
@@ -71,6 +77,8 @@ export const TwitterClientInterface: Client = {
         await manager.like?.start();
 
         await manager.scalping?.startLoop();
+
+        await manager.trending?.start();
 
         return manager;
     },
