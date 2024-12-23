@@ -52,6 +52,13 @@ export class TelegramClient {
 
         this.bot.on("message", async (ctx) => {
             try {
+                // Check if message is a command
+                // @ts-ignore: Unhandled message type
+                if (ctx.message.text?.startsWith('/')) {
+                    await ctx.reply("Commands will be available soon");
+                    return;
+                }
+
                 console.log("this.tgTrader", this.tgTrader);
                 if (this.tgTrader) {
                     const userId = ctx.from?.id.toString();

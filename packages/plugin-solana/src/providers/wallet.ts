@@ -157,6 +157,10 @@ export class WalletProvider {
             this.cache.set(cacheKey, portfolio);
             return portfolio;
         } catch (error) {
+            //log url
+            console.log(
+                `**** fetchPortfolioValue url: ${PROVIDER_CONFIG.BIRDEYE_API}/v1/wallet/token_list?wallet=${this.walletPublicKey.toBase58()}`
+            );
             console.error("Error fetching portfolio:", error);
             throw error;
         }

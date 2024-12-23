@@ -22,17 +22,19 @@ class TwitterManager {
     discovery: TwitterDiscoveryClient;
     trending: CryptoTrendingClient;
     tg_bot: Telegraf<Context>;
-    constructor(runtime: IAgentRuntime, botToken: string) {
+    constructor(runtime: IAgentRuntime) {
         // every 66 mins trending coin analysis
         // every 55 mins retweet own recent post
         // every 44 mins post about coin scalp idea
         // every 33 mins comment on a random post
         // every 22 mins like a random post
         // every 11 mins reply to mentions
-        this.tg_bot = new Telegraf(botToken);
+        this.tg_bot = new Telegraf(runtime.getSetting("TELEGRAM_BOT_TOKEN"));
+        
+
+        this.messageManager = new MessageManager(this.tg_bot, runtime);
         elizaLogger.log("starting crypto trending client 99 mins");
         this.trending = new CryptoTrendingClient(runtime, this.tg_bot);
-        this.messageManager = new MessageManager(this.tg_bot, runtime);
         elizaLogger.log("starting twitter scalping client 66 mins");
         this.scalping = new ScalpingIdeaClient(this.client, runtime, this.tg_bot); 
         elizaLogger.log("starting twitter post client every 44 mins");
@@ -64,7 +66,7 @@ export const TwitterClientInterface: Client = {
 
         elizaLogger.log("Twitter client started **********");
 
-        const manager = new TwitterManager(runtime, runtime.getSetting("TELEGRAM_BOT_TOKEN"));
+        const manager = new TwitterManager(runtime);
 
         await manager.client?.init();
 
